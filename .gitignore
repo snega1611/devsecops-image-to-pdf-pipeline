@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Python build
+build/
+dist/
+*.egg-info/
+
+# Environment variables
+.env
+
+# Docker
+*.tar
+
+# Terraform (for later)
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Jenkins
+jenkins_home/
+
+# Misc
+.idea/
