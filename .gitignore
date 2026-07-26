@@ -1,4 +1,6 @@
+# ======================
 # Python
+# ======================
 __pycache__/
 *.py[cod]
 *.pyo
@@ -7,38 +9,88 @@ __pycache__/
 .coverage
 htmlcov/
 
-# Virtual Environment
+
+# ======================
+# Virtual Environments
+# ======================
 venv/
 .venv/
 env/
 
-# VS Code
+
+# ======================
+# IDE
+# ======================
 .vscode/
+.idea/
 
-# macOS
+
+# ======================
+# OS Files
+# ======================
 .DS_Store
+Thumbs.db
 
+
+# ======================
 # Logs
+# ======================
 *.log
 
-# Python build
+
+# ======================
+# Python Build Files
+# ======================
 build/
 dist/
 *.egg-info/
 
-# Environment variables
+
+# ======================
+# Environment Variables
+# ======================
 .env
+.env.*
 
+
+# ======================
 # Docker
+# ======================
 *.tar
+docker-compose.override.yml
 
-# Terraform (for later)
+
+# ======================
+# Jenkins
+# ======================
+jenkins_home/
+
+
+# ======================
+# Terraform
+# ======================
 .terraform/
 *.tfstate
 *.tfstate.*
+.terraform.lock.hcl
 
-# Jenkins
-jenkins_home/
 
-# Misc
-.idea/
+# ======================
+# Kubernetes
+# ======================
+*.secret.yaml
+kubeconfig
+
+
+# ======================
+# Application Runtime Data
+# ======================
+uploads/
+outputs/
+
+
+# ======================
+# Temporary Files
+# ======================
+*.tmp
+*.bak

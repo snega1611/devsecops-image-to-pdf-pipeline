@@ -20,29 +20,79 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Test Upload Service') {
             steps {
                 sh '''
-                python3 -m venv venv
-                . venv/bin/activate
+                python3 -m venv upload-service/venv
+
+                . upload-service/venv/bin/activate
+
                 pip install --upgrade pip
-                pip install -r requirements.txt
+
+                pip install -r upload-service/requirements.txt
+
+                cd upload-service
+
+                python -m pytest tests
+
+                deactivate
                 '''
             }
         }
 
-        stage('Run Tests') {
+        stage('Test Converter Service') {
             steps {
                 sh '''
-                . venv/bin/activate
-                python -m pytest
+                python3 -m venv converter-service/venv
+
+                . converter-service/venv/bin/activate
+
+                pip install --upgrade pip
+
+                pip install -r converter-service/requirements.txt
+
+                cd converter-service
+
+                python -m pytest tests
+
+                deactivate
                 '''
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Upload Service Image') {
             steps {
-                sh 'docker build -f docker/Dockerfile -t image-to-pdf:latest .'
+                sh '''
+                docker build \
+                -t upload-service:latest \
+                ./upload-service
+                '''
+            }
+        }
+
+        stage('Build Converter Service Image') {
+            steps {
+                sh '''
+                docker build \
+                -t converter-service:latest \
+                ./converter-service
+                '''
+            }
+        }
+
+        stage('Trivy Scan Upload Service') {
+            steps {
+                sh '''
+                trivy image upload-service:latest
+                '''
+            }
+        }
+
+        stage('Trivy Scan Converter Service') {
+            steps {
+                sh '''
+                trivy image converter-service:latest
+                '''
             }
         }
 

@@ -1,0 +1,68 @@
+services:
+
+  upload-service:
+    build:
+      context: ./upload-service
+    container_name: upload-service
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./shared/uploads:/shared/uploads
+      - ./shared/outputs:/shared/outputs
+
+    depends_on:
+      - converter-service
+
+    networks:
+      - devops-network
+
+    restart: unless-stopped
+
+
+  converter-service:
+    build:
+      context: ./converter-service
+    container_name: converter-service
+
+    ports:
+      - "8001:8001"
+
+    volumes:
+      - ./shared/uploads:/shared/uploads
+      - ./shared/outputs:/shared/outputs
+
+    networks:
+      - devops-network
+
+    restart: unless-stopped
+
+
+  jenkins:
+    build:
+      context: ./jenkins
+
+    container_name: jenkins
+
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    networks:
+      - devops-network
+
+    restart: unless-stopped
+
+
+volumes:
+  jenkins_home:
+
+
+networks:
+  devops-network:
+    driver: bridge
