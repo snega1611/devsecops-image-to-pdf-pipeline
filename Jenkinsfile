@@ -10,28 +10,31 @@ pipeline {
             }
         }
 
+
         stage('Verify Tools') {
             steps {
                 sh '''
                 python3 --version
                 git --version
                 docker --version
+                trivy --version
                 '''
             }
         }
+
 
         stage('Test Upload Service') {
             steps {
                 sh '''
-                python3 -m venv upload-service/venv
+                cd upload-service
 
-                . upload-service/venv/bin/activate
+                python3 -m venv venv
+
+                . venv/bin/activate
 
                 pip install --upgrade pip
 
-                pip install -r upload-service/requirements.txt
-
-                cd upload-service
+                pip install -r requirements.txt
 
                 python -m pytest tests
 
@@ -39,19 +42,20 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Test Converter Service') {
             steps {
                 sh '''
-                python3 -m venv converter-service/venv
+                cd converter-service
 
-                . converter-service/venv/bin/activate
+                python3 -m venv venv
+
+                . venv/bin/activate
 
                 pip install --upgrade pip
 
-                pip install -r converter-service/requirements.txt
-
-                cd converter-service
+                pip install -r requirements.txt
 
                 python -m pytest tests
 
@@ -59,6 +63,7 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Build Upload Service Image') {
             steps {
@@ -70,6 +75,7 @@ pipeline {
             }
         }
 
+
         stage('Build Converter Service Image') {
             steps {
                 sh '''
@@ -80,6 +86,7 @@ pipeline {
             }
         }
 
+
         stage('Trivy Scan Upload Service') {
             steps {
                 sh '''
@@ -87,6 +94,7 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Trivy Scan Converter Service') {
             steps {
@@ -97,6 +105,7 @@ pipeline {
         }
 
     }
+
 
     post {
 
