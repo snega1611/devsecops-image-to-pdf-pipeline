@@ -1,17 +1,25 @@
 import os
-import shutil
-import uuid
 from pathlib import Path
 
-from fastapi import UploadFile
 
-UPLOAD_DIR = Path("/shared/uploads")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+BASE_DIR = Path(
+    os.getenv("STORAGE_PATH", "./storage")
+)
+
+UPLOAD_DIR = BASE_DIR / "uploads"
+
+UPLOAD_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)
 
 
-def save_image(file: UploadFile):
+def save_image(file):
 
-    extension = os.path.splitext(file.filename)[1]
+    extension = Path(file.filename).suffix
+
+    import uuid
+    import shutil
 
     unique_filename = f"{uuid.uuid4()}{extension}"
 
@@ -20,5 +28,4 @@ def save_image(file: UploadFile):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Return both filenames
-    return unique_filename, file.filename
+    return unique_filename
