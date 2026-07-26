@@ -9,10 +9,11 @@ RUN apt-get update && apt-get install -y \
     python3-venv \
     curl \
     ca-certificates \
-    docker.io \
-    gnupg
+    gnupg \
+    docker.io
 
-# Install Trivy
+
+# Add Trivy
 RUN curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key \
     | gpg --dearmor -o /usr/share/keyrings/trivy.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] \
@@ -21,6 +22,11 @@ RUN curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key \
     > /etc/apt/sources.list.d/trivy.list && \
     apt-get update && \
     apt-get install -y trivy
+
+
+# Allow Jenkins user to access Docker socket
+RUN groupadd -f docker && \
+    usermod -aG docker jenkins
 
 
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
