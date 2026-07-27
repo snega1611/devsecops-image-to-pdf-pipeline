@@ -73,6 +73,7 @@ pipeline {
             steps {
                 sh '''
                 docker build \
+                -t $DOCKER_REPO/upload-service:${BUILD_NUMBER} \
                 -t $DOCKER_REPO/upload-service:latest \
                 ./upload-service
                 '''
@@ -84,6 +85,7 @@ pipeline {
             steps {
                 sh '''
                 docker build \
+                -t $DOCKER_REPO/converter-service:${BUILD_NUMBER} \
                 -t $DOCKER_REPO/converter-service:latest \
                 ./converter-service
                 '''
@@ -94,7 +96,7 @@ pipeline {
         stage('Trivy Scan Upload Service') {
             steps {
                 sh '''
-                trivy image $DOCKER_REPO/upload-service:latest
+                trivy image $DOCKER_REPO/upload-service:${BUILD_NUMBER}
                 '''
             }
         }
@@ -103,7 +105,7 @@ pipeline {
         stage('Trivy Scan Converter Service') {
             steps {
                 sh '''
-                trivy image $DOCKER_REPO/converter-service:latest
+                trivy image $DOCKER_REPO/converter-service:${BUILD_NUMBER}
                 '''
             }
         }
@@ -123,8 +125,10 @@ pipeline {
                     sh '''
                     echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
+                    docker push $DOCKER_REPO/upload-service:${BUILD_NUMBER}
                     docker push $DOCKER_REPO/upload-service:latest
 
+                    docker push $DOCKER_REPO/converter-service:${BUILD_NUMBER}
                     docker push $DOCKER_REPO/converter-service:latest
 
                     docker logout
