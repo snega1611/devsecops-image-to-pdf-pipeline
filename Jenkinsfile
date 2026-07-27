@@ -1,6 +1,10 @@
 pipeline {
 
-    agent any
+    agent 
+    
+    environment {
+    DOCKER_REPO = "sne16"
+    }
 
     stages {
 
@@ -69,7 +73,7 @@ pipeline {
             steps {
                 sh '''
                 docker build \
-                -t upload-service:latest \
+                -t $DOCKER_REPO/upload-service:latest \
                 ./upload-service
                 '''
             }
@@ -80,7 +84,7 @@ pipeline {
             steps {
                 sh '''
                 docker build \
-                -t converter-service:latest \
+                -t $DOCKER_REPO/converter-service:latest \
                 ./converter-service
                 '''
             }
@@ -90,7 +94,7 @@ pipeline {
         stage('Trivy Scan Upload Service') {
             steps {
                 sh '''
-                trivy image upload-service:latest
+                trivy image $DOCKER_REPO/upload-service:latest
                 '''
             }
         }
@@ -99,10 +103,39 @@ pipeline {
         stage('Trivy Scan Converter Service') {
             steps {
                 sh '''
-                trivy image converter-service:latest
+                trivy image $DOCKER_REPO/converter-service:latest
                 '''
             }
         }
+
+        stage('Push Images to Docker Hub') {
+
+            steps {
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+
+                    docker push $DOCKER_REPO/upload-service:latest
+
+                    docker push $DOCKER_REPO/converter-service:latest
+
+                    docker logout
+                    '''
+
+                }
+
+            }
+
+        }
+        
 
     }
 
