@@ -1,6 +1,6 @@
 pipeline {
 
-    agent 
+    agent any
     
     environment {
     DOCKER_REPO = "sne16"
