@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse
 
 from app.utils import save_image
 
-app = FastAPI(title="Upload Service")
+app = FastAPI(title="My Upload Service")
 
 
 @app.get("/")
