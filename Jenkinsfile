@@ -139,6 +139,26 @@ pipeline {
             }
 
         }
+
+        stage('Update GitOps Repo') {
+            steps {
+                sh '''
+                git clone https://github.com/snega1611/image-to-pdf-gitops.git
+
+                cd image-to-pdf-gitops
+
+                sed -i "s/BUILD_NUMBER/${IMAGE_TAG}/g" k8s/upload-deployment.yaml
+
+                sed -i "s/BUILD_NUMBER/${IMAGE_TAG}/g" k8s/converter-deployment.yaml
+
+                git add .
+
+                git commit -m "Update image tag to ${IMAGE_TAG}"
+
+                git push
+                '''
+            }
+        }
         
 
     }

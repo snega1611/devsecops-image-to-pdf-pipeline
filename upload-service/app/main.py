@@ -52,9 +52,11 @@ async def upload_image(file: UploadFile = File(...)):
 
     # Call converter service
     try:
+        
+        CONVERTER_URL = os.getenv("CONVERTER_URL")
 
         response = requests.post(
-            "http://converter-service:8001/convert",
+            CONVERTER_URL,
             json={
                 "filename": saved_filename
             },
@@ -65,7 +67,7 @@ async def upload_image(file: UploadFile = File(...)):
 
         raise HTTPException(
             status_code=500,
-            detail="Converter Service is unavailable."
+            detail="Converter Service is currently unavailable."
         )
 
     if response.status_code != 200:

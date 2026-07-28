@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 BASE_DIR = Path(
-    os.getenv("STORAGE_PATH", "./storage")
+    os.getenv("STORAGE_PATH", "/shared")
 )
 
 UPLOAD_DIR = BASE_DIR / "uploads"
@@ -28,4 +28,4 @@ def save_image(file):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    return unique_filename
+    return unique_filename, file.filename
