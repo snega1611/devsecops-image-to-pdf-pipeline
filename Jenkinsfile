@@ -153,6 +153,8 @@ pipeline {
                 ]) {
 
                     sh '''
+                    rm -rf image-to-pdf-gitops
+                    
                     git clone https://$GIT_USER:$GIT_TOKEN@github.com/snega1611/image-to-pdf-gitops.git
 
                     cd image-to-pdf-gitops
