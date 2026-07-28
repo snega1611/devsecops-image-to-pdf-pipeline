@@ -154,7 +154,7 @@ pipeline {
 
                     sh '''
                     rm -rf image-to-pdf-gitops
-                    
+
                     git clone https://$GIT_USER:$GIT_TOKEN@github.com/snega1611/image-to-pdf-gitops.git
 
                     cd image-to-pdf-gitops
@@ -162,12 +162,13 @@ pipeline {
                     git config user.name "Snega"
                     git config user.email "snegasuresh123@gmail.com"
 
-                    sed -i "s/BUILD_NUMBER/${BUILD_NUMBER}/g" k8s/upload-deployment.yaml
-                    sed -i "s/BUILD_NUMBER/${BUILD_NUMBER}/g" k8s/converter-deployment.yaml
+                    sed -i "s|image: sne16/upload-service:.*|image: sne16/upload-service:${BUILD_NUMBER}|g" k8s/upload-deployment.yaml
+
+                    sed -i "s|image: sne16/converter-service:.*|image: sne16/converter-service:${BUILD_NUMBER}|g" k8s/converter-deployment.yaml
 
                     git add .
 
-                    git commit -m "Update image tag to ${BUILD_NUMBER}"
+                    git commit -m "Update image tag to ${BUILD_NUMBER}" || echo "No changes to commit"
 
                     git push
                     '''
