@@ -55,7 +55,7 @@ The entire software delivery lifecycle is automated using **Jenkins, Docker, Kub
 
 * Terraform
 
-## Monitoring & Security
+## Security
 
 * Trivy
 
