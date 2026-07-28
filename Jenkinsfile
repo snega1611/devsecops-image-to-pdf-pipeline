@@ -3,7 +3,7 @@ pipeline {
     agent any
     
     environment {
-    DOCKER_REPO = "sne16"
+    DOCKER_REPO = "dockerhubusername"
     }
 
     stages {
@@ -162,9 +162,9 @@ pipeline {
                     git config user.name "your name"
                     git config user.email "youe email id"
 
-                    sed -i "s|image: sne16/upload-service:.*|image: sne16/upload-service:${BUILD_NUMBER}|g" k8s/upload-deployment.yaml
+                    sed -i "s|image: dockerhubusername/upload-service:.*|image: dockerhubusername/upload-service:${BUILD_NUMBER}|g" k8s/upload-deployment.yaml
 
-                    sed -i "s|image: sne16/converter-service:.*|image: sne16/converter-service:${BUILD_NUMBER}|g" k8s/converter-deployment.yaml
+                    sed -i "s|image: dockerhubusername/converter-service:.*|image: dockerhubusername/converter-service:${BUILD_NUMBER}|g" k8s/converter-deployment.yaml
 
                     git add .
 
