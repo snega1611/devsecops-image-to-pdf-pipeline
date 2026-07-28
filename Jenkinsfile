@@ -141,22 +141,35 @@ pipeline {
         }
 
         stage('Update GitOps Repo') {
+
             steps {
-                sh '''
-                git clone https://github.com/snega1611/image-to-pdf-gitops.git
 
-                cd image-to-pdf-gitops
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-gitops',
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_TOKEN'
+                    )
+                ]) {
 
-                sed -i "s/BUILD_NUMBER/${IMAGE_TAG}/g" k8s/upload-deployment.yaml
+                    sh '''
+                    git clone https://$GIT_USER:$GIT_TOKEN@github.com/snega1611/image-to-pdf-gitops.git
 
-                sed -i "s/BUILD_NUMBER/${IMAGE_TAG}/g" k8s/converter-deployment.yaml
+                    cd image-to-pdf-gitops
 
-                git add .
+                    git config user.name "Snega"
+                    git config user.email "snegasuresh123@gmail.com"
 
-                git commit -m "Update image tag to ${IMAGE_TAG}"
+                    sed -i "s/BUILD_NUMBER/${BUILD_NUMBER}/g" k8s/upload-deployment.yaml
+                    sed -i "s/BUILD_NUMBER/${BUILD_NUMBER}/g" k8s/converter-deployment.yaml
 
-                git push
-                '''
+                    git add .
+
+                    git commit -m "Update image tag to ${BUILD_NUMBER}"
+
+                    git push
+                    '''
+                }
             }
         }
         
