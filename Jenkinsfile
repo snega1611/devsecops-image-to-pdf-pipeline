@@ -159,8 +159,8 @@ pipeline {
 
                     cd image-to-pdf-gitops
 
-                    git config user.name "Snega"
-                    git config user.email "snegasuresh123@gmail.com"
+                    git config user.name "your name"
+                    git config user.email "youe email id"
 
                     sed -i "s|image: sne16/upload-service:.*|image: sne16/upload-service:${BUILD_NUMBER}|g" k8s/upload-deployment.yaml
 
